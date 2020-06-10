@@ -607,8 +607,8 @@ def format_action_log_message(log_entry):
 def format_collection(col: Collection, permitted: QuerySet = None) -> str:
     """
     A template tag that receives a collection and returns a formatted string,
-    taking into account its hierarchical depth,
-    and optionally its relative depth if a filtered queryset is supplied
+    taking into account its hierarchical depth, and optionally its relative
+    depth if a filtered queryset is supplied
     Example usage: {% format_collection collection collections %}
     """
     def _depth(cur_col, count=0):
