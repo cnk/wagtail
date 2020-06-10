@@ -71,6 +71,7 @@ class CollectionForm(forms.ModelForm):
             (c.pk, format_collection(c)) for c in choices
         ]
 
+
 class BaseCollectionMemberForm(forms.ModelForm):
     """
     Abstract form handler for editing models that belong to a collection,
@@ -98,8 +99,7 @@ class BaseCollectionMemberForm(forms.ModelForm):
             # editing an existing document; ensure that the list of available collections
             # includes its current collection
             self.collections = (
-                self.collections | Collection.objects.filter(
-                id=self.instance.collection_id)
+                self.collections | Collection.objects.filter(id=self.instance.collection_id)
             )
 
         if len(self.collections) == 0:
@@ -241,6 +241,12 @@ class BaseGroupCollectionMemberPermissionFormSet(forms.BaseFormSet):
         )
 
 
+# TODO: This needs to be able to handle Collection permissions that don't include every Collection.
+class CollectionChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return format_collection(obj)
+
+
 def collection_member_permission_formset_factory(
     model, permission_types, template, default_prefix=None
 ):
@@ -271,9 +277,9 @@ def collection_member_permission_formset_factory(
         defines the permissions that are assigned to an entity
         (i.e. group or user) for a specific collection
         """
-        collection = forms.ModelChoiceField(
-            queryset=Collection.objects.all().prefetch_related(
-                'group_permissions')
+        collection = CollectionChoiceField(
+            # TODO: This needs to be able to handle Collection permissions that don't include every Collection.
+            queryset=Collection.objects.all().prefetch_related('group_permissions')
         )
         permissions = PermissionMultipleChoiceField(
             queryset=permission_queryset,
