@@ -8,8 +8,8 @@ from django.utils.translation import gettext as _
 
 from wagtail.core.models import Collection, CollectionViewRestriction, GroupCollectionPermission
 
-from .view_restrictions import BaseViewRestrictionForm
 from ..templatetags.wagtailadmin_tags import format_collection
+from .view_restrictions import BaseViewRestrictionForm
 
 
 class CollectionViewRestrictionForm(BaseViewRestrictionForm):
@@ -47,7 +47,8 @@ class CollectionForm(forms.ModelForm):
     parent = forms.ChoiceField(
         required=False,
         widget=SelectWidget,
-        help_text=_("Select hierarchical position. Some options are disabled because they're descendants and therefore can't be its parent."),
+        help_text=_("Select hierarchical position. Some options are disabled because they're descendants of "
+                    "this Collection, and therefore can't be its parent."),
     )
 
     class Meta:
